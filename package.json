@@ -8,8 +8,8 @@
     "apps/frontend"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=apps/frontend",
-    "lint": "npm run lint --workspace=apps/frontend"
+    "dev": "concurrently \"npm run dev --workspace=apps/backend\" \"npm run dev --workspace=apps/frontend\"",
+    "lint": "npm run lint --workspace=apps/backend && npm run lint --workspace=apps/frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
