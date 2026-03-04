@@ -1,7 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { todosApi } from "../api/todosApi";
-import type { Todo, TodosState } from "../types/todo.types";
+import type {
+  CreateTodoPayload,
+  Todo,
+  TodosState,
+  UpdateTodoPayload,
+} from "../types/todo.types";
 
 export const fetchTodos = createAsyncThunk<
   Todo[],
@@ -10,6 +16,30 @@ export const fetchTodos = createAsyncThunk<
 >("todos/fetchAll", async (_, { rejectWithValue }) => {
   try {
     return await todosApi.getAll();
+  } catch (err) {
+    return rejectWithValue((err as Error).message);
+  }
+});
+
+export const createTodo = createAsyncThunk<
+  Todo,
+  CreateTodoPayload,
+  { rejectValue: string }
+>("todos/create", async (payload, { rejectWithValue }) => {
+  try {
+    return await todosApi.create(payload);
+  } catch (err) {
+    return rejectWithValue((err as Error).message);
+  }
+});
+
+export const updateTodo = createAsyncThunk<
+  Todo,
+  { id: string; payload: UpdateTodoPayload },
+  { rejectValue: string }
+>("todos/update", async ({ id, payload }, { rejectWithValue }) => {
+  try {
+    return await todosApi.update(id, payload);
   } catch (err) {
     return rejectWithValue((err as Error).message);
   }
@@ -30,7 +60,11 @@ const initialState: TodosState = {
 const todosSlice = createSlice({
   name: "todos",
   initialState,
-  reducers: {},
+  reducers: {
+    setEditingId(state, action: PayloadAction<string | null>) {
+      state.editingId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     // fetchTodos
     builder
@@ -46,7 +80,34 @@ const todosSlice = createSlice({
         state.status = "failed";
         state.error = action.payload ?? "Failed to fetch todos";
       });
+
+    // createTodo
+    builder
+      .addCase(createTodo.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(createTodo.fulfilled, (state, action) => {
+        state.items.unshift(action.payload);
+      })
+      .addCase(createTodo.rejected, (state, action) => {
+        state.error = action.payload ?? "Failed to create todo";
+      });
+
+    // updateTodo
+    builder
+      .addCase(updateTodo.fulfilled, (state, action) => {
+        const index = state.items.findIndex(
+          (t) => t._id === action.payload._id,
+        );
+        if (index !== -1) state.items[index] = action.payload;
+        state.editingId = null;
+      })
+      .addCase(updateTodo.rejected, (state, action) => {
+        state.error = action.payload ?? "Failed to update todo";
+      });
   },
 });
+
+export const { setEditingId } = todosSlice.actions;
 
 export default todosSlice.reducer;

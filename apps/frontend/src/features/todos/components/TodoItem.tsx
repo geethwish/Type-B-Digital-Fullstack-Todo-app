@@ -2,14 +2,19 @@ import { useState } from 'react';
 import type { Todo } from '../types/todo.types';
 import { TodoEditForm } from './TodoEditForm';
 import toast from 'react-hot-toast';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { setEditingId } from '../store/todoSlice';
+import { selectEditingId } from '../store/todosSelectors';
 
 interface TodoItemProps {
   todo: Todo;
 }
 
 export const TodoItem = ({ todo }: TodoItemProps) => {
+  const dispatch = useAppDispatch();
+  const editingId = useAppSelector(selectEditingId);
   const [isDeleting, setIsDeleting] = useState(false);
-  const isEditing = false;
+  const isEditing = editingId === todo._id;
 
   const handleToggle = () => {
     console.log(todo._id);
@@ -30,7 +35,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
   };
 
   const handleEdit = () => {
-    console.log(todo._id);
+    dispatch(setEditingId(todo._id));
   };
 
   const formattedDate = new Date(todo.createdAt).toLocaleDateString('en-US', {

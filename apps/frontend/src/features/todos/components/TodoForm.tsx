@@ -1,12 +1,15 @@
+import { useAppDispatch } from '@/hooks/redux';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import toast from 'react-hot-toast';
+import { createTodo } from '../store/todoSlice';
 
 interface FormErrors {
   title?: string;
 }
 
 export const TodoForm = () => {
+  const dispatch = useAppDispatch();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
@@ -29,8 +32,7 @@ export const TodoForm = () => {
 
     setIsSubmitting(true);
     try {
-      console.log({ title: title.trim(), description: description.trim() });
-
+      await dispatch(createTodo({ title: title.trim(), description: description.trim() })).unwrap();
       setTitle('');
       setDescription('');
       setErrors({});

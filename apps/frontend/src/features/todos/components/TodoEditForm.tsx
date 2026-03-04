@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
 import type { Todo } from '../types/todo.types';
 import toast from 'react-hot-toast';
+import { useAppDispatch } from '@/hooks/redux';
+import { setEditingId, updateTodo } from '../store/todoSlice';
 
 interface TodoEditFormProps {
   todo: Todo;
@@ -12,6 +14,7 @@ interface FormErrors {
 }
 
 export const TodoEditForm = ({ todo }: TodoEditFormProps) => {
+  const dispatch = useAppDispatch();
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -35,7 +38,7 @@ export const TodoEditForm = ({ todo }: TodoEditFormProps) => {
     if (!validate()) return;
     setIsSubmitting(true);
     try {
-      console.log({ id: todo._id, payload: { title: title.trim(), description: description.trim() } });
+      await dispatch(updateTodo({ id: todo._id, payload: { title: title.trim(), description: description.trim() } })).unwrap();
 
       toast.success('Todo updated ✏️');
     } catch (err) {
@@ -46,7 +49,7 @@ export const TodoEditForm = ({ todo }: TodoEditFormProps) => {
   };
 
   const handleCancel = () => {
-    console.log("canceled");
+    dispatch(setEditingId(null));
 
   };
 
