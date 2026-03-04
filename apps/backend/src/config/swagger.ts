@@ -48,6 +48,22 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+        UpdateTodoDto: {
+          type: "object",
+          properties: {
+            title: {
+              type: "string",
+              minLength: 1,
+              maxLength: 200,
+              example: "Buy groceries",
+            },
+            description: {
+              type: "string",
+              maxLength: 1000,
+              example: "Milk, eggs, and bread",
+            },
+          },
+        },
         ApiResponse: {
           type: "object",
           properties: {

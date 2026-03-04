@@ -22,4 +22,7 @@ export interface UpdateTodoDto {
 export interface ITodoService {
   findAll(): Promise<ITodo[]>;
   create(dto: CreateTodoDto): Promise<ITodo>;
+  update(id: string, dto: UpdateTodoDto): Promise<ITodo | null>;
+  toggleDone(id: string): Promise<ITodo | null>;
+  delete(id: string): Promise<ITodo | null>;
 }

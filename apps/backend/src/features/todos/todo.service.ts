@@ -19,6 +19,30 @@ export class TodoService implements ITodoService {
     });
     return todo.save();
   }
+
+  async update(id: string, dto: UpdateTodoDto): Promise<ITodo | null> {
+    return Todo.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          title: dto.title?.trim(),
+          description: dto.description?.trim(),
+        },
+      },
+      { new: true, runValidators: true },
+    );
+  }
+
+  async toggleDone(id: string): Promise<ITodo | null> {
+    const todo = await Todo.findById(id);
+    if (!todo) return null;
+    todo.done = !todo.done;
+    return todo.save();
+  }
+
+  async delete(id: string): Promise<ITodo | null> {
+    return Todo.findByIdAndDelete(id);
+  }
 }
 
 export const todoService = new TodoService();

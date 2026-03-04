@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { todoController } from "./todo.controller";
-import { createTodoValidation } from "./todo.validation";
+import { createTodoValidation, updateTodoValidation } from "./todo.validation";
 import { validate } from "../../middleware/validate";
 import { asyncHandler } from "../../middleware/errorHandler";
 
@@ -21,14 +21,16 @@ router.post(
   asyncHandler(todoController.create.bind(todoController)),
 );
 
-router.put("/:id", (req, res) => {
-  res.send("Update todo");
-});
-router.patch("/:id/done", (req, res) => {
-  res.send("Toggle todo done");
-});
-router.delete("/:id", (req, res) => {
-  res.send("Delete todo");
-});
+router.put(
+  "/:id",
+  updateTodoValidation,
+  validate,
+  asyncHandler(todoController.update.bind(todoController)),
+);
+router.patch(
+  "/:id/done",
+  asyncHandler(todoController.toggleDone.bind(todoController)),
+);
+router.delete("/:id", asyncHandler(todoController.delete.bind(todoController)));
 
 export default router;
