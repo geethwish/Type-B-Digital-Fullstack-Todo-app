@@ -1,11 +1,8 @@
-const Header = () => {
+import { selectTodosCount } from "@/features/todos/store/todosSelectors";
+import { useAppSelector } from "@/hooks/redux";
 
-    // TODO: Get the counts from the store
-    const counts = {
-        active: 3,
-        done: 2,
-        total: 5,
-    }
+const Header = () => {
+    const counts = useAppSelector(selectTodosCount);
     const progressPct = counts.total ? Math.round((counts.done / counts.total) * 100) : 0;
 
     return (

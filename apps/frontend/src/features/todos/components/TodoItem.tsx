@@ -3,7 +3,7 @@ import type { Todo } from '../types/todo.types';
 import { TodoEditForm } from './TodoEditForm';
 import toast from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
-import { setEditingId } from '../store/todoSlice';
+import { deleteTodo, setEditingId, toggleTodoDone } from '../store/todoSlice';
 import { selectEditingId } from '../store/todosSelectors';
 
 interface TodoItemProps {
@@ -17,8 +17,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
   const isEditing = editingId === todo._id;
 
   const handleToggle = () => {
-    console.log(todo._id);
-
+    dispatch(toggleTodoDone(todo._id));
     toast.success(todo.done ? 'Marked as active 🔄' : 'Marked as done ✅', { duration: 1500 });
   };
 
@@ -26,7 +25,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
     if (!confirm('Are you sure you want to delete this todo?')) return;
     setIsDeleting(true);
     try {
-      console.log(todo._id);
+      await dispatch(deleteTodo(todo._id)).unwrap();
       toast.success('Todo deleted 🗑️');
     } catch (err) {
       toast.error((err as string) || 'Failed to delete todo');
