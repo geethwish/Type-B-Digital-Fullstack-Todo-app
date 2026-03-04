@@ -3,6 +3,9 @@ import { TodoItem } from './TodoItem';
 
 import { Spinner } from '@/components/shared/Spinner';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { fetchTodos } from '../store/todoSlice';
+import { selectFilteredTodos, selectTodosStatus, selectTodosError } from '../store/todosSelectors';
 
 const filterEmptyMessages = {
   all: { title: 'No todos yet!', description: 'Add your first todo above to get started.' },
@@ -11,23 +14,17 @@ const filterEmptyMessages = {
 };
 
 export const TodoList = () => {
-  const todos = [{
-    _id: '1',
-    title: 'Todo 1',
-    description: 'Todo 1 description',
-    done: false,
-    createdAt: '2021-01-01',
-    updatedAt: '2021-01-01',
-  }];
-  const status = "idle";
-  const error = null;
-  const filter = "all";
+  const dispatch = useAppDispatch();
+  const todos = useAppSelector(selectFilteredTodos);
+  const status = useAppSelector(selectTodosStatus);
+  const error = useAppSelector(selectTodosError);
+
+  const filter = useAppSelector((state) => state.todos.filter) as keyof typeof filterEmptyMessages;
 
 
   useEffect(() => {
-    console.log("fetch todos");
-
-  }, []);
+    dispatch(fetchTodos());
+  }, [dispatch]);
 
   if (status === 'loading') {
     return (
