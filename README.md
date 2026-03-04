@@ -6,12 +6,12 @@ A full-stack Todo application built with **React + TypeScript** (frontend) and *
 
 ## Tech Stack
 
-| Layer     | Technology                                              |
-|-----------|---------------------------------------------------------|
-| Frontend  | React 19, TypeScript, Vite, Redux Toolkit, Tailwind CSS |
-| Backend   | Express.js, TypeScript, Mongoose, Swagger               |
-| Database  | MongoDB (Atlas or local)                                |
-| Monorepo  | npm Workspaces                                          |
+| Layer    | Technology                                              |
+| -------- | ------------------------------------------------------- |
+| Frontend | React 19, TypeScript, Vite, Redux Toolkit, Tailwind CSS |
+| Backend  | Express.js, TypeScript, Mongoose, Swagger               |
+| Database | MongoDB (Atlas or local)                                |
+| Monorepo | npm Workspaces                                          |
 
 ---
 
@@ -71,13 +71,13 @@ CORS_ORIGIN=http://localhost:5174
 API_PREFIX=/api/v1
 ```
 
-| Variable      | Description                                      | Default               |
-|---------------|--------------------------------------------------|-----------------------|
-| `NODE_ENV`    | Runtime environment (`development` / `test`)     | `development`         |
-| `PORT`        | Port the API server listens on                   | `8001`                |
-| `MONGODB_URI` | MongoDB connection string (**required**)         | —                     |
-| `CORS_ORIGIN` | Allowed origin for CORS                          | `http://localhost:5173` |
-| `API_PREFIX`  | Base path prefix for all API routes              | `/api/v1`             |
+| Variable      | Description                                  | Default                 |
+| ------------- | -------------------------------------------- | ----------------------- |
+| `NODE_ENV`    | Runtime environment (`development` / `test`) | `development`           |
+| `PORT`        | Port the API server listens on               | `8001`                  |
+| `MONGODB_URI` | MongoDB connection string (**required**)     | —                       |
+| `CORS_ORIGIN` | Allowed origin for CORS                      | `http://localhost:5173` |
+| `API_PREFIX`  | Base path prefix for all API routes          | `/api/v1`               |
 
 #### Frontend — `apps/frontend/.env`
 
@@ -85,9 +85,9 @@ API_PREFIX=/api/v1
 VITE_API_BASE_URL=http://localhost:8001
 ```
 
-| Variable            | Description                        | Default                    |
-|---------------------|------------------------------------|----------------------------|
-| `VITE_API_BASE_URL` | Base URL of the backend API        | `http://localhost:8001`    |
+| Variable            | Description                 | Default                 |
+| ------------------- | --------------------------- | ----------------------- |
+| `VITE_API_BASE_URL` | Base URL of the backend API | `http://localhost:8001` |
 
 > **Note:** Make sure `CORS_ORIGIN` in the backend `.env` matches the URL the frontend dev server uses (default: `http://localhost:5174`).
 
@@ -105,12 +105,12 @@ npm run dev
 
 This starts both servers concurrently:
 
-| App      | URL                          |
-|----------|------------------------------|
-| Frontend | http://localhost:5174        |
-| Backend  | http://localhost:8001        |
+| App      | URL                            |
+| -------- | ------------------------------ |
+| Frontend | http://localhost:5174          |
+| Backend  | http://localhost:8001          |
 | API Docs | http://localhost:8001/api-docs |
-| Health   | http://localhost:8001/health |
+| Health   | http://localhost:8001/health   |
 
 ### Run apps individually
 
@@ -128,13 +128,13 @@ npm run dev --workspace=apps/frontend
 
 All routes are prefixed with `/api/v1`.
 
-| Method   | Endpoint            | Description              |
-|----------|---------------------|--------------------------|
-| `GET`    | `/api/v1/todos`     | Get all todos            |
-| `POST`   | `/api/v1/todos`     | Create a new todo        |
-| `PUT`    | `/api/v1/todos/:id` | Update a todo by ID      |
+| Method   | Endpoint                 | Description         |
+| -------- | ------------------------ | ------------------- |
+| `GET`    | `/api/v1/todos`          | Get all todos       |
+| `POST`   | `/api/v1/todos`          | Create a new todo   |
+| `PUT`    | `/api/v1/todos/:id`      | Update a todo by ID |
 | `PATCH`  | `/api/v1/todos/:id/done` | Toggle done status  |
-| `DELETE` | `/api/v1/todos/:id` | Delete a todo by ID      |
+| `DELETE` | `/api/v1/todos/:id`      | Delete a todo by ID |
 
 Full interactive documentation is available at **http://localhost:8001/api-docs** (Swagger UI).
 
@@ -210,7 +210,19 @@ npm run start --workspace=apps/backend
 
 ---
 
-## License
+## Known Limitations
 
-This project is licensed under the terms found in the [LICENSE](./LICENSE) file.
+### Backend
 
+- **No pagination** — `GET /api/v1/todos` returns all documents in one response; large datasets will increase latency and payload size.
+- **No authentication / authorisation** — todos are publicly accessible; any caller can read or mutate any record.
+- **No rate limiting** — the API has no request throttling, making it vulnerable to abuse or accidental flooding.
+- **Single resource** — only todos are supported; no user accounts, labels, or projects.
+
+### Frontend
+
+- **No pagination or infinite scroll** — the entire todo list is fetched and rendered at once; performance degrades with large lists.
+- **No list virtualisation** — all todo items are mounted in the DOM simultaneously; a very long list will cause layout/paint bottlenecks.
+- **No offline support** — the app has no service worker or caching layer; it is unusable without a live API connection.
+
+---
