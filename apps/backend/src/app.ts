@@ -5,6 +5,7 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
+import todoRoutes from "./features/todos/todo.routes";
 
 const createApp = (): Application => {
   const app = express();
@@ -44,6 +45,12 @@ const createApp = (): Application => {
   app.get("/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
+
+  // API Routes
+  const apiPrefix = process.env.API_PREFIX || "/api/v1";
+  console.log(apiPrefix);
+
+  app.use(`${apiPrefix}/todos`, todoRoutes);
 
   // 404 Handler
   app.use(notFoundHandler);

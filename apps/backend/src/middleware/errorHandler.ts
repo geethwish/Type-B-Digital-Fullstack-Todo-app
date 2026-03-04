@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 import { sendError } from "../utils/apiResponse";
 
 export class AppError extends Error {
@@ -37,3 +37,17 @@ export const errorHandler = (
 export const notFoundHandler = (_req: Request, res: Response): void => {
   sendError(res, `Route not found`, 404);
 };
+
+/*
+ Higher-order function that wraps an async route handler and automatically
+ forwards any thrown error (including AppError instances) to the global
+ errorHandler middleware. Eliminates repetitive try/catch boilerplate from
+ every controller method.
+*/
+export function asyncHandler(
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+): RequestHandler {
+  return (req, res, next): void => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}

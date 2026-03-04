@@ -1,4 +1,8 @@
 import { Router } from "express";
+import { todoController } from "./todo.controller";
+import { createTodoValidation } from "./todo.validation";
+import { validate } from "../../middleware/validate";
+import { asyncHandler } from "../../middleware/errorHandler";
 
 const router = Router();
 
@@ -9,12 +13,14 @@ const router = Router();
  *   description: TODO management endpoints
  */
 
-router.get("/", (req, res) => {
-  res.send("Get all todos");
-});
-router.post("/", (req, res) => {
-  res.send("Create todo");
-});
+router.get("/", asyncHandler(todoController.getAll.bind(todoController)));
+router.post(
+  "/",
+  createTodoValidation,
+  validate,
+  asyncHandler(todoController.create.bind(todoController)),
+);
+
 router.put("/:id", (req, res) => {
   res.send("Update todo");
 });
