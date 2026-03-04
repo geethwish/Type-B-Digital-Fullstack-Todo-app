@@ -99,7 +99,7 @@ describe('TodoEditForm', () => {
 
   it('dispatches setEditingId(null) when Cancel is clicked', async () => {
     const store = createStore();
-    store.dispatch = vi.fn(store.dispatch);
+    store.dispatch = vi.fn(store.dispatch) as unknown as typeof store.dispatch;
     renderWithStore(makeTodo(), store);
     fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
