@@ -10,13 +10,21 @@ const Header = () => {
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-4">
                 {/* Brand */}
                 <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600
-              flex items-center justify-center shadow-md flex-shrink-0">
-                        <span className="text-lg sm:text-xl">✅</span>
+                    {/* Icon mark */}
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-200">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7 4h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                        </svg>
                     </div>
+
                     <div className="min-w-0">
-                        <h1 className="text-base sm:text-xl font-bold text-gray-800 leading-tight">TodoApp</h1>
-                        <p className="text-[10px] sm:text-xs text-gray-400 hidden xs:block">Stay organized, stay productive</p>
+                        <h1 className="text-lg sm:text-2xl font-extrabold leading-tight tracking-tight">
+                            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-500 bg-clip-text text-transparent">
+                                Todo
+                            </span>
+                            <span className="text-gray-800">App</span>
+                        </h1>
+                        <p className="text-[10px] sm:text-xs text-gray-400 hidden xs:block tracking-wide">Stay organized, stay productive</p>
                     </div>
                 </div>
 
